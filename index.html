@@ -154,6 +154,16 @@
   .ev.milestone .d{background:var(--orange);box-shadow:0 0 0 4px rgba(241,89,40,.18)}
   .ev.card .d,.ev.mac .d{background:var(--cream)}
   .ev.fail .d{background:#7a2410}
+  .ev.fix .d{background:var(--black);border:2px solid var(--orange);width:12px;height:12px}
+  .ev.fix .x::before{content:"AUTO-FIX";margin-right:8px;font-size:9.5px;letter-spacing:.16em;font-weight:700;color:var(--black);background:var(--orange);padding:2px 6px;border-radius:2px;vertical-align:2px}
+  .ev.warn .d{background:#7a2410;box-shadow:0 0 0 4px rgba(122,36,16,.35)}
+  .ev.warn .x{font-weight:600}
+  .ev.warn .x::before{content:"HEADS-UP";margin-right:8px;font-size:9.5px;letter-spacing:.16em;font-weight:700;color:var(--cream);background:#7a2410;padding:2px 6px;border-radius:2px;vertical-align:2px}
+  .ev.pass .d{background:var(--cream);box-shadow:0 0 0 4px rgba(240,226,208,.2)}
+  .ev.pass .x{font-weight:700}
+  .alert{display:none;margin:0 0 18px;padding:14px 18px;border-radius:6px;border:1px solid #7a2410;background:rgba(122,36,16,.25);font-size:14px}
+  .alert.show{display:block}
+  .alert b{letter-spacing:.14em;font-size:11px;margin-right:8px}
   .ev .x{font-size:14px;line-height:1.45}
   .ev.milestone .x{font-weight:600}
   .ev.new .x::after{content:"NEW";margin-left:8px;font-size:9.5px;letter-spacing:.16em;font-weight:700;color:var(--orange);border:1px solid rgba(241,89,40,.5);padding:2px 5px;border-radius:2px;vertical-align:2px}
@@ -176,6 +186,7 @@
     <div class="pill"><span class="rec" id="rec"></span><b id="livelbl">LIVE</b><span id="clock">Connecting…</span></div>
   </header>
 
+  <div class="alert" id="alert"></div>
   <div class="hero">
     <div class="vf">
       <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
@@ -328,6 +339,8 @@ function render(s){
     else{$('binv').className='binv wait';$('binv').textContent=`Wait · ${b.bad.length} not confirmed`;$('binsub').textContent=`Do not empty yet · checked ${ago} min ago`;}
   }
   const ups=s.updates||[];
+  const lastWarn=ups.find(e=>e[2]==='warn'), lastGood=ups.find(e=>e[2]!=='warn');
+  if(lastWarn && (!lastGood || lastWarn[0]>=lastGood[0]-1 || (s.now-lastWarn[0])<1800)){$('alert').className='alert show';$('alert').innerHTML=`<b>HEADS-UP</b>${esc(lastWarn[1].replace(/^Heads-up:\s*/,''))}`}else{$('alert').className='alert'}
   $('updmeta').textContent=`${ups.length} updates · newest first`;
   $('feed').innerHTML=ups.map(e=>{const dt=new Date(e[0]*1000),isNew=(s.now-e[0])<3600;
     return `<div class="ev ${e[2]} ${isNew?'new':''}"><span class="t">${dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'})} · ${dt.toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit'})}</span><span class="d"></span><span class="x">${esc(e[1])}</span></div>`}).join('');
