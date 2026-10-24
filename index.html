@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grapher Media · CREWcasts Handover</title>
+<link rel="icon" href="logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#121110; --s1:#1C1A18; --s2:#262320; --hair:#35312C;
+    --cream:#F0E2D0; --muted:#9A938A; --orange:#F15928;
+    --serif:"Source Serif 4", Cambria, Georgia, serif;
+    --sans: Inter, Calibri, -apple-system, "Segoe UI", sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--black);color:var(--cream);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  body{padding:26px clamp(16px,4vw,52px) 40px;min-height:100vh;position:relative;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;
+    background:radial-gradient(900px 420px at 92% -8%, rgba(241,89,40,.13), transparent 62%),
+               radial-gradient(700px 400px at -10% 110%, rgba(240,226,208,.05), transparent 60%)}
+  .watermark{position:fixed;right:-60px;bottom:-70px;width:420px;opacity:.035;pointer-events:none;filter:grayscale(1) brightness(2)}
+  .wrap{max-width:1200px;margin:0 auto;position:relative}
+
+  .kicker{font-size:11.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--orange)}
+  .muted{color:var(--muted)}
+
+  /* header */
+  header{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding-bottom:22px;border-bottom:1px solid var(--hair);margin-bottom:26px}
+  .brand{display:flex;align-items:center;gap:22px}
+  .brand img{width:132px;height:auto;display:block}
+  .brand .sep{width:1px;height:64px;background:var(--hair)}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,3.6vw,40px);line-height:1.05;margin:6px 0 0;letter-spacing:-.01em}
+  .pill{display:inline-flex;align-items:center;gap:10px;padding:9px 14px;border:1px solid var(--hair);border-radius:99px;background:var(--s1);font-size:13px;font-variant-numeric:tabular-nums;color:var(--muted)}
+  .pill b{color:var(--cream);font-weight:600;letter-spacing:.14em;font-size:11px}
+  .rec{width:9px;height:9px;border-radius:50%;background:var(--orange);animation:blink 1.2s steps(2,start) infinite}
+  .rec.stale{background:var(--muted);animation:none}
+  @keyframes blink{to{visibility:hidden}}
+  @media (max-width:640px){.brand .sep{display:none}.brand{flex-direction:column;align-items:flex-start;gap:12px}}
+
+  /* viewfinder hero */
+  .hero{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:22px}
+  @media (max-width:900px){.hero{grid-template-columns:1fr}}
+  .vf{position:relative;padding:30px 28px 26px;border-radius:6px;background:linear-gradient(180deg,var(--s2),var(--s1));overflow:hidden}
+  .vf .c{position:absolute;width:30px;height:30px;border-color:var(--orange);border-style:solid;opacity:.95}
+  .vf .tl{top:12px;left:12px;border-width:3px 0 0 3px}.vf .tr{top:12px;right:12px;border-width:3px 3px 0 0}
+  .vf .bl{bottom:12px;left:12px;border-width:0 0 3px 3px}.vf .br{bottom:12px;right:12px;border-width:0 3px 3px 0}
+  .vf .hud{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);padding:0 8px}
+  .vf .hud .r{display:flex;align-items:center;gap:7px;color:var(--cream)}
+  .ringbox{position:relative;width:min(280px,72vw);aspect-ratio:1;margin:12px auto 6px}
+  .ringbox svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .ticks line{stroke:var(--hair);stroke-width:2}
+  .ring-bg{stroke:rgba(240,226,208,.07)}
+  .ring-fg{stroke:var(--orange);stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 14px rgba(241,89,40,.55))}
+  .ringbox .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+  .cross{position:absolute;left:50%;top:50%;width:18px;height:18px;transform:translate(-50%,-50%);opacity:.0}
+  .pct{font-family:var(--serif);font-weight:700;font-size:clamp(52px,7vw,72px);line-height:.95;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .pct small{font-size:.38em;color:var(--muted);font-weight:600;margin-left:2px}
+  .gbline{font-size:13px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums}
+  .tc{margin-top:14px;display:flex;justify-content:center;gap:18px;font-variant-numeric:tabular-nums}
+  .tc div{text-align:center}
+  .tc .v{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:20px;letter-spacing:.06em}
+  .tc .l{font-size:10px;letter-spacing:.2em;color:var(--muted);font-weight:700;margin-top:3px}
+
+  /* stats */
+  .side{display:flex;flex-direction:column;gap:16px}
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  @media (max-width:520px){.stats{grid-template-columns:1fr}}
+  .tile{background:var(--s1);border:1px solid var(--hair);border-radius:6px;padding:18px;display:flex;gap:14px;align-items:flex-start}
+  .badge{flex:none;width:42px;height:42px;border-radius:50%;background:var(--orange);display:grid;place-items:center;color:var(--black)}
+  .badge svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .tile .label{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .tile .value{font-family:var(--serif);font-weight:700;font-size:28px;margin-top:4px;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.1}
+  .tile .sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+  .graph{background:var(--s1);border:1px solid var(--hair);border-radius:6px;padding:16px 18px 10px;flex:1;min-height:150px;display:flex;flex-direction:column}
+  .graph .head{display:flex;justify-content:space-between;align-items:baseline}
+  .graph svg{width:100%;flex:1;min-height:100px;display:block;margin-top:8px}
+
+  /* sections */
+  section{margin-top:34px}
+  .sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  h2{font-family:var(--serif);font-weight:700;font-size:26px;margin:6px 0 0;letter-spacing:-.01em}
+  .meta{font-size:13.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .now{display:flex;align-items:center;gap:14px;margin-bottom:14px;padding:14px 18px;border-left:3px solid var(--orange);background:linear-gradient(90deg,rgba(241,89,40,.14),rgba(241,89,40,0) 70%);font-size:14px;border-radius:0 6px 6px 0}
+  .now .rec{flex:none}
+  .now b{font-weight:600}
+  .now .file{font-family:ui-monospace,Menlo,monospace;font-size:13px}
+
+  .bar{height:8px;border-radius:2px;background:rgba(240,226,208,.07);overflow:hidden}
+  .bar>i{display:block;height:100%;background:var(--cream);transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+  .bar.active>i{background:repeating-linear-gradient(-45deg,var(--orange) 0 9px,#c9441c 9px 18px);background-size:25.5px 25.5px;animation:st .8s linear infinite;box-shadow:0 0 14px rgba(241,89,40,.55)}
+  @keyframes st{to{background-position:25.5px 0}}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px}
+  .g{position:relative;background:var(--s1);border:1px solid var(--hair);border-radius:6px;padding:18px 18px 16px;transition:border-color .4s}
+  .g .row1{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:16px}
+  .g .who{display:flex;gap:12px;align-items:center}
+  .g .ini{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:15px;background:var(--s2);color:var(--cream);border:1px solid var(--hair)}
+  .g .date{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);font-weight:700}
+  .g .name{font-family:var(--serif);font-weight:700;font-size:19px;line-height:1.15;margin-top:2px}
+  .g .foot{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:10px;font-variant-numeric:tabular-nums}
+  .chip{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:5px 9px;border-radius:2px;border:1px solid var(--hair);color:var(--muted);white-space:nowrap}
+  .chip.active{color:var(--orange);border-color:rgba(241,89,40,.55)}
+  .chip.done{color:var(--black);background:var(--cream);border-color:var(--cream)}
+  .chip.failed{color:var(--cream);background:#7a2410;border-color:#7a2410}
+  .g.active{border-color:rgba(241,89,40,.55);box-shadow:0 18px 50px -28px rgba(241,89,40,.8)}
+  .g.active .ini{background:var(--orange);color:var(--black);border-color:var(--orange)}
+  .g.done .ini{background:var(--cream);color:var(--black);border-color:var(--cream)}
+  .g .vfc{position:absolute;width:14px;height:14px;border-color:var(--orange);border-style:solid;opacity:0;transition:opacity .4s}
+  .g.active .vfc{opacity:1}
+  .g .a{top:-1px;left:-1px;border-width:2px 0 0 2px}.g .b{top:-1px;right:-1px;border-width:2px 2px 0 0}
+  .g .c2{bottom:-1px;left:-1px;border-width:0 0 2px 2px}.g .d{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+
+  .list{background:var(--s1);border:1px solid var(--hair);border-radius:6px;padding:6px}
+  .item{display:grid;grid-template-columns:34px 1fr 180px 74px;gap:14px;align-items:center;padding:11px 12px;border-radius:4px}
+  .item+.item{border-top:1px solid rgba(53,49,44,.6)}
+  .item .ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--hair);color:var(--muted)}
+  .item .ic svg{width:15px;height:15px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .item.verified .ic{background:var(--cream);color:var(--black);border-color:var(--cream)}
+  .item.active .ic{background:var(--orange);color:var(--black);border-color:var(--orange)}
+  .item.active .ic svg{animation:spin 1.4s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .item .n{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .item .n small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+  .item .s{text-align:right;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+  @media (max-width:640px){.item{grid-template-columns:34px 1fr 64px}.item .bar{display:none}}
+
+  .drivebox{display:grid;grid-template-columns:280px 1fr;gap:16px}
+  @media (max-width:820px){.drivebox{grid-template-columns:1fr}}
+  .dtotals{background:var(--s1);border:1px solid var(--hair);border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:16px;position:relative}
+  .dtotals .label{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .dtotals .big{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.05;font-variant-numeric:tabular-nums;margin-top:4px}
+  .dnote{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--muted)}
+  .dfolders{background:var(--s1);border:1px solid var(--hair);border-radius:6px;padding:10px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:22px}
+  .df{display:grid;grid-template-columns:1fr 70px;gap:4px 10px;padding:9px 0;border-bottom:1px solid rgba(53,49,44,.6)}
+  .df .nm{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .df .nm small{color:var(--muted);margin-left:6px}
+  .df .sz{text-align:right;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .df .bar{grid-column:1/3;height:5px}
+  .ondrive{color:var(--cream)}
+  footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:12.5px}
+  footer .tag{display:flex;align-items:center;gap:12px}
+  footer img{width:30px;height:auto}
+  .err{color:var(--orange)}
+</style>
+</head>
+<body>
+<img class="watermark" src="logo-mark.png" alt="">
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <img src="logo-full.png" alt="Grapher Media">
+      <span class="sep"></span>
+      <div><div class="kicker">CREWcasts · SKDIV Handover</div><h1 id="headline">Uploading to Google Drive</h1></div>
+    </div>
+    <div class="pill"><span class="rec" id="rec"></span><b id="livelbl">LIVE</b><span id="clock">Connecting…</span></div>
+  </header>
+
+  <div class="hero">
+    <div class="vf">
+      <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
+      <div class="hud"><span class="r"><span class="rec" id="rec2"></span>REC</span><span id="hudsize">4K · UPLOAD</span></div>
+      <div class="ringbox">
+        <svg viewBox="0 0 300 300">
+          <g class="ticks" id="ticks"></g>
+          <circle class="ring-bg" cx="150" cy="150" r="118" fill="none" stroke-width="14"/>
+          <circle class="ring-fg" id="ring" cx="150" cy="150" r="118" fill="none" stroke-width="14" stroke-dasharray="741.4" stroke-dashoffset="741.4"/>
+        </svg>
+        <div class="mid"><div class="pct" id="pct">0<small>%</small></div><div class="gbline" id="gb">–</div></div>
+      </div>
+      <div class="tc">
+        <div><div class="v" id="elapsed">00:00:00</div><div class="l">ELAPSED</div></div>
+        <div><div class="v" id="remain">--:--:--</div><div class="l">REMAINING</div></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="stats">
+        <div class="tile"><span class="badge"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+          <div><div class="label">Speed now</div><div class="value" id="speed">–</div><div class="sub" id="speedavg">&nbsp;</div></div></div>
+        <div class="tile"><span class="badge"><svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></span>
+          <div><div class="label">Left to upload</div><div class="value" id="left">–</div><div class="sub" id="leftsub">&nbsp;</div></div></div>
+        <div class="tile"><span class="badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+          <div><div class="label">Estimated finish</div><div class="value" id="eta">–</div><div class="sub" id="etasub">&nbsp;</div></div></div>
+        <div class="tile"><span class="badge"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></span>
+          <div><div class="label">Verified</div><div class="value" id="verified">–</div><div class="sub">checksum-matched on Drive</div></div></div>
+      </div>
+      <div class="graph">
+        <div class="head"><span class="kicker">Upload speed</span><span class="meta" id="graphcap">last 15 minutes</span></div>
+        <svg id="spark" viewBox="0 0 600 130" preserveAspectRatio="none">
+          <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F15928" stop-opacity=".5"/><stop offset="1" stop-color="#F15928" stop-opacity="0"/></linearGradient></defs>
+          <g id="gridlines"></g>
+          <path id="sparkArea" fill="url(#sg)" d=""/><path id="sparkLine" fill="none" stroke="#F15928" stroke-width="2.4" d=""/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="sechead"><div><div class="kicker">Live on Google Drive</div><h2>Inside the Handover folder</h2></div><div class="meta" id="drivemeta">Checking Google Drive…</div></div>
+    <div class="drivebox">
+      <div class="dtotals">
+        <div><div class="label">Files confirmed on Drive</div><div class="big" id="dfiles">–</div></div>
+        <div><div class="label">Stored on Drive</div><div class="big" id="dbytes">–</div></div>
+        <div class="dnote"><span class="rec" id="drec"></span><span id="dchecked">Reading the folder straight from Google every minute</span></div>
+      </div>
+      <div class="dfolders" id="dfolders"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sechead"><div><div class="kicker">From the camera cards</div><h2>October sessions</h2></div><div class="meta" id="cardsmeta"></div></div>
+    <div class="now" id="cardsnow" hidden></div>
+    <div class="grid" id="guests"></div>
+  </section>
+
+  <section>
+    <div class="sechead"><div><div class="kicker">From John's Mac</div><h2>Edits, BTS, interviews and audio</h2></div><div class="meta" id="macmeta"></div></div>
+    <div class="now" id="macnow" hidden></div>
+    <div class="list" id="groups"></div>
+  </section>
+
+  <footer>
+    <span class="tag"><img src="logo-mark.png" alt=""><span><b style="color:var(--cream)">Grapher Media</b> · Media production for founders, businesses and events.</span></span>
+    <span>Every file is checksum-matched against the original before it counts as done. <span id="err"></span></span>
+  </footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const GB=b=>(b/1e9).toFixed(b>=100e9?0:1)+' GB';
+const MBs=b=>(b/1e6).toFixed(1);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad=n=>String(Math.max(0,Math.floor(n))).padStart(2,'0');
+const hms=s=>s==null?'--:--:--':`${pad(s/3600)}:${pad(s%3600/60)}:${pad(s%60)}`;
+const short=p=>p.split('/').slice(-1)[0];
+const initials=n=>n.split(/\s+/).filter(w=>/^[A-Za-zÀ-ỹ]/.test(w)).slice(0,2).map(w=>w[0].toUpperCase()).join('');
+const ICON={
+  film:'<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>',
+  mic:'<svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>',
+  music:'<svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+  folder:'<svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
+  check:'<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+  spin:'<svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.56"/></svg>',
+  alert:'<svg viewBox="0 0 24 24"><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/><circle cx="12" cy="12" r="10"/></svg>',
+};
+const kind=n=>/Audio|Mika|Saikkos|Simran|Rose|MopGarden|John/.test(n)&&!/BTS|Interview|Teaser/.test(n)?'mic':/Music/.test(n)?'music':/Final Cut|BTS|Interview|Teaser|Animation/.test(n)?'film':'folder';
+const pretty=n=>n.replace(/^Podcasts\//,'').replace(/^(\d{4}) (\d\d) (\d\d)-/,'').replace('Guarav','Gaurav');
+
+// tick marks around the ring (viewfinder dial)
+(()=>{let h='';for(let i=0;i<60;i++){const a=i/60*2*Math.PI,r1=i%5?136:132,r2=142;h+=`<line x1="${150+r1*Math.cos(a)}" y1="${150+r1*Math.sin(a)}" x2="${150+r2*Math.cos(a)}" y2="${150+r2*Math.sin(a)}"/>`}$('ticks').innerHTML=h;
+  let g='';for(let y of [32,64,96]) g+=`<line x1="0" x2="600" y1="${y}" y2="${y}" stroke="#35312C" stroke-dasharray="3 6"/>`;$('gridlines').innerHTML=g;})();
+
+let S=null,lastOk=0,API=null;
+async function loadApi(){try{const c=await (await fetch('config.json?'+Date.now(),{cache:'no-store'})).json();API=c.api.replace(/\/$/,'');}catch(e){}}
+function spark(hist){
+  if(!hist||hist.length<2)return;
+  const max=Math.max(14e6,...hist.map(h=>h[1]))*1.08,t0=hist[0][0],t1=hist[hist.length-1][0];
+  const P=hist.map(h=>[((h[0]-t0)/Math.max(1,t1-t0))*600,126-(h[1]/max)*116]);
+  let d=`M${P[0][0]},${P[0][1]}`;for(let i=1;i<P.length;i++){const [x0,y0]=P[i-1],[x1,y1]=P[i],cx=(x0+x1)/2;d+=` C${cx},${y0} ${cx},${y1} ${x1},${y1}`}
+  $('sparkLine').setAttribute('d',d);$('sparkArea').setAttribute('d',d+' L600,130 L0,130 Z');
+  $('graphcap').textContent=`peak ${MBs(Math.max(...hist.map(h=>h[1])))} MB/s · last ${Math.round((t1-t0)/60)} min`;
+}
+function render(s){
+  const pct=s.total?100*s.done/s.total:0;
+  $('pct').innerHTML=(pct<10?pct.toFixed(1):pct.toFixed(0))+'<small>%</small>';
+  $('gb').textContent=`${GB(s.done)} of ${GB(s.total)}`;
+  $('ring').style.strokeDashoffset=741.4*(1-pct/100);
+  $('speed').textContent=MBs(s.rate)+' MB/s';
+  $('speedavg').textContent=`3-min average ${MBs(s.avg_rate)} MB/s`;
+  $('left').textContent=GB(s.total-s.done);
+  const files=s.cards.files_done+s.mac.verified,ft=s.cards.files+s.mac.groups.length;
+  $('leftsub').textContent=`${ft-files} items still to go`;
+  $('eta').textContent=s.eta?new Date(s.eta*1000).toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit'}):'–';
+  $('etasub').textContent=s.eta?new Date(s.eta*1000).toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'}):'';
+  $('verified').textContent=`${files} / ${ft}`;
+  const done=s.done>=s.total-1e6;
+  $('headline').textContent=done?'Handover upload complete':'Uploading to Google Drive';
+  spark(s.history);
+
+  const c=s.cards;
+  $('cardsmeta').textContent=`${c.files_done} of ${c.files} files · ${GB(c.done)} of ${GB(c.total)}`+(c.failed?` · ${c.failed} need a retry`:'');
+  if(c.current){$('cardsnow').hidden=false;$('cardsnow').innerHTML=`<span class="rec"></span><span><b>Now uploading</b> <span class="file">${esc(short(c.current))}</span> <span class="muted">· ${c.current_pct??0}% at ${esc(c.current_rate||'')} · about ${esc(c.current_eta||'')} left on this clip</span></span>`}else $('cardsnow').hidden=true;
+  $('guests').innerHTML=c.guests.map(g=>{
+    const p=g.total?100*g.done/g.total:0,st=g.failed?'failed':g.files_done===g.files?'done':g.active?'active':'queued';
+    const label={done:'Done',active:'Uploading',queued:'Queued',failed:'Retry'}[st];
+    return `<div class="g ${st}"><span class="vfc a"></span><span class="vfc b"></span><span class="vfc c2"></span><span class="vfc d"></span>
+      <div class="row1"><div class="who"><span class="ini">${st==='done'?'✓':esc(initials(g.name))}</span><div><div class="date">${esc(g.date)}</div><div class="name">${esc(g.name)}</div></div></div><span class="chip ${st}">${label}</span></div>
+      <div class="bar ${st==='active'?'active':''}"><i style="width:${p.toFixed(1)}%"></i></div>
+      <div class="foot"><span>${g.files_done} of ${g.files} files</span><span>${GB(g.done)} / ${GB(g.total)}</span></div>
+      <div class="foot"><span class="${g.on_drive===g.files?'ondrive':''}">On Google Drive: ${g.on_drive} of ${g.files}${g.on_drive===g.files?' ✓':''}</span></div></div>`}).join('');
+
+  const d=s.drive||{};
+  if(d.checked){
+    $('dfiles').textContent=d.files.toLocaleString('en-AU');
+    $('dbytes').textContent=GB(d.bytes);
+    const ago=Math.max(0,Math.round(s.now-d.checked));
+    $('dchecked').textContent=(d.ok?'Read from Google ':'Last good read ')+(ago<60?ago+' s':Math.round(ago/60)+' min')+' ago · refreshes every minute';
+    $('drec').classList.toggle('stale',!d.ok||ago>180);
+    $('drivemeta').textContent=`${d.folders.length} folders · ${GB(d.bytes)} in Handover`;
+    const mx=Math.max(1,...d.folders.map(f=>f[2]));
+    $('dfolders').innerHTML=d.folders.map(f=>`<div class="df"><span class="nm">${esc(pretty(f[0]).replace(/^SKDIV Commercial\//,'SKDIV · '))}<small>${f[1]} files</small></span><span class="sz">${GB(f[2])}</span><div class="bar"><i style="width:${(100*f[2]/mx).toFixed(1)}%"></i></div></div>`).join('');
+  }
+
+  const m=s.mac;
+  $('macmeta').textContent=`${m.verified} of ${m.groups.length} groups verified · ${GB(m.done)} of ${GB(m.total)}`+(m.failed?` · ${m.failed} need a retry`:'');
+  if(m.current){$('macnow').hidden=false;$('macnow').innerHTML=`<span class="rec"></span><span><b>Now uploading</b> ${esc(pretty(m.current))} <span class="muted">· ${m.current_pct??0}% at ${esc(m.current_rate||'')}</span></span>`}else $('macnow').hidden=true;
+  $('groups').innerHTML=m.groups.map(g=>{
+    const p=g.total?100*g.done/g.total:0,ic=g.state==='verified'?ICON.check:g.state==='active'?ICON.spin:g.state==='failed'?ICON.alert:ICON[kind(g.name)];
+    return `<div class="item ${g.state}"><span class="ic">${ic}</span>
+      <span class="n">${esc(pretty(g.name))}<small>${g.files} files · ${g.state==='verified'?'verified on Drive':g.state==='active'?'uploading':g.state==='failed'?'check failed, will retry':'queued'}</small></span>
+      <div class="bar ${g.state==='active'?'active':''}"><i style="width:${p.toFixed(1)}%"></i></div>
+      <span class="s">${GB(g.total)}</span></div>`}).join('');
+}
+function clocks(){
+  const now=Date.now()/1000, stale=Date.now()-lastOk>20000;
+  $('rec').classList.toggle('stale',stale);$('rec2').classList.toggle('stale',stale);
+  $('livelbl').textContent=stale?'WAITING':'LIVE';
+  $('clock').textContent=new Date().toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit',second:'2-digit'});
+  if(S){ if(S.run_start) $('elapsed').textContent=hms(now-S.run_start);
+         $('remain').textContent=S.eta?hms(S.eta-now):'--:--:--'; }
+}
+async function tick(){
+  try{if(!API) await loadApi(); const r=await fetch(API+'/status.json',{cache:'no-store'});const s=await r.json();if(s.error)throw 0;S=s;render(s);lastOk=Date.now();$('err').textContent='';}
+  catch(e){API=null;$('err').innerHTML='<span class="err">· Reconnecting… (the Mac must be on and online)</span>';}
+}
+tick();setInterval(tick,4000);clocks();setInterval(clocks,1000);
+</script>
+</body>
+</html>
