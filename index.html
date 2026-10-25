@@ -156,6 +156,8 @@
   .ev.fail .d{background:#7a2410}
   .ev.fix .d{background:var(--black);border:2px solid var(--orange);width:12px;height:12px}
   .ev.fix .x::before{content:"AUTO-FIX";margin-right:8px;font-size:9.5px;letter-spacing:.16em;font-weight:700;color:var(--black);background:var(--orange);padding:2px 6px;border-radius:2px;vertical-align:2px}
+  .ev.john .d{background:var(--orange)}
+  .ev.john .x::before{content:"JOHN SCAN";margin-right:8px;font-size:9.5px;letter-spacing:.16em;font-weight:700;color:var(--black);background:var(--cream);padding:2px 6px;border-radius:2px;vertical-align:2px}
   .ev.warn .d{background:#7a2410;box-shadow:0 0 0 4px rgba(122,36,16,.35)}
   .ev.warn .x{font-weight:600}
   .ev.warn .x::before{content:"HEADS-UP";margin-right:8px;font-size:9.5px;letter-spacing:.16em;font-weight:700;color:var(--cream);background:#7a2410;padding:2px 6px;border-radius:2px;vertical-align:2px}
@@ -226,6 +228,20 @@
       </div>
     </div>
   </div>
+
+  <section id="johnsec" hidden>
+    <div class="sechead"><div><div class="kicker">Now working on</div><h2>Finding John in the footage</h2></div><div class="meta" id="jmeta"></div></div>
+    <div class="now" id="jnow" hidden></div>
+    <div class="drivebox">
+      <div class="dtotals">
+        <div><div class="label">Videos checked</div><div class="big" id="jvid">&ndash;</div></div>
+        <div><div class="label">Footage checked</div><div class="big" id="jgb">&ndash;</div></div>
+        <div><div class="label">Videos with John so far</div><div class="big" id="jfound">&ndash;</div></div>
+        <div class="dnote"><span class="rec"></span><span>Read-only: nothing on Google Drive is changed, moved or deleted. Div's files and the Handover stay exactly as they are. Clips are copied to Crew/John on the Mac only.</span></div>
+      </div>
+      <div class="dfolders" id="jlist"></div>
+    </div>
+  </section>
 
   <section>
     <div class="sechead"><div><div class="kicker">Live on Google Drive</div><h2>Inside the Handover folder</h2></div><div class="meta" id="drivemeta">Checking Google Drive…</div></div>
@@ -344,6 +360,17 @@ function render(s){
   $('updmeta').textContent=`${ups.length} updates · newest first`;
   $('feed').innerHTML=ups.map(e=>{const dt=new Date(e[0]*1000),isNew=(s.now-e[0])<3600;
     return `<div class="ev ${e[2]} ${isNew?'new':''}"><span class="t">${dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'})} · ${dt.toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit'})}</span><span class="d"></span><span class="x">${esc(e[1])}</span></div>`}).join('');
+  const j=s.john;
+  if(j&&j.total){
+    $('johnsec').hidden=false;
+    $('jvid').textContent=`${j.scanned.toLocaleString('en-AU')} / ${j.total.toLocaleString('en-AU')}`;
+    $('jgb').textContent=`${GB(j.bytes_done)} of ${GB(j.bytes_total)}`;
+    $('jfound').textContent=j.found.length;
+    $('jmeta').textContent=j.done?'Scan complete':(j.eta?`About ${hms(j.eta-s.now)} to go · finish around ${new Date(j.eta*1000).toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit'})}`:'Starting…');
+    if(j.current.length&&!j.done){$('jnow').hidden=false;$('jnow').innerHTML=`<span class="rec"></span><span><b>Checking now</b> `+j.current.map(p=>`<span class="file">${esc(short(p.replace(/／/g,'/')))}</span>`).join(' <span class="muted">·</span> ')+`</span>`}else $('jnow').hidden=true;
+    const mx=Math.max(1,...j.found.map(f=>f[1]));
+    $('jlist').innerHTML=j.found.length?j.found.map(f=>`<div class="df"><span class="nm">${esc(f[0].replace(/／/g,'/'))}<small>${f[1]} matching frames (to be checked by eye)</small></span><span class="sz">${f[1]}</span><div class="bar"><i style="width:${(100*f[1]/mx).toFixed(1)}%"></i></div></div>`).join(''):'<div class="df"><span class="nm">No confirmed matches yet<small>Matches appear here as each video finishes</small></span></div>';
+  }
   const d=s.drive||{};
   if(d.checked){
     $('dfiles').textContent=d.files.toLocaleString('en-AU');
