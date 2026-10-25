@@ -355,6 +355,7 @@ function render(s){
     $('versub').textContent=`found so far · ${J.scanned.toLocaleString('en-AU')} of ${J.total.toLocaleString('en-AU')} videos checked`;
     $('graphlbl').textContent='Drive read speed';
     if(J.history&&J.history.length>1) spark(J.history);
+    if(J.paused){$('headline').textContent='Finding John · paused until tonight';$('etasub').textContent='Paused';$('eta').textContent='Tonight';$('speedavg').textContent='Paused';}
   }else{
     $('hudsize').textContent='4K · UPLOAD';$('lblspeed').textContent='Speed now';$('lblleft').textContent='Left to upload';
     $('lblver').textContent='Verified';$('versub').textContent='checksum-matched on Drive';$('graphlbl').textContent='Upload speed';
@@ -391,7 +392,7 @@ function render(s){
     $('jvid').textContent=`${j.scanned.toLocaleString('en-AU')} / ${j.total.toLocaleString('en-AU')}`;
     $('jgb').textContent=`${GB(j.bytes_done)} of ${GB(j.bytes_total)}`;
     $('jfound').textContent=j.found.length;
-    $('jmeta').textContent=j.done?'Scan complete':(j.eta?`About ${hms(j.eta-s.now)} to go · finish around ${new Date(j.eta*1000).toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit'})}`:'Starting…');
+    $('jmeta').textContent=j.done?'Scan complete':j.paused?'Paused while John uses the Mac · continues tonight':(j.eta?`About ${hms(j.eta-s.now)} to go · finish around ${new Date(j.eta*1000).toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit'})}`:'Starting…');
     if(j.current.length&&!j.done){$('jnow').hidden=false;$('jnow').innerHTML=`<span class="rec"></span><span><b>Checking now</b> `+j.current.map(p=>`<span class="file">${esc(short(p.replace(/／/g,'/')))}</span>`).join(' <span class="muted">·</span> ')+`</span>`}else $('jnow').hidden=true;
     const mx=Math.max(1,...j.found.map(f=>f[1]));
     $('jlist').innerHTML=j.found.length?j.found.map(f=>`<div class="df"><span class="nm">${esc(f[0].replace(/／/g,'/'))}<small>${f[1]} matching frames (to be checked by eye)</small></span><span class="sz">${f[1]}</span><div class="bar"><i style="width:${(100*f[1]/mx).toFixed(1)}%"></i></div></div>`).join(''):'<div class="df"><span class="nm">No confirmed matches yet<small>Matches appear here as each video finishes</small></span></div>';
