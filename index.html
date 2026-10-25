@@ -210,16 +210,16 @@
     <div class="side">
       <div class="stats">
         <div class="tile"><span class="badge"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
-          <div><div class="label">Speed now</div><div class="value" id="speed">–</div><div class="sub" id="speedavg">&nbsp;</div></div></div>
+          <div><div class="label" id="lblspeed">Speed now</div><div class="value" id="speed">–</div><div class="sub" id="speedavg">&nbsp;</div></div></div>
         <div class="tile"><span class="badge"><svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></span>
-          <div><div class="label">Left to upload</div><div class="value" id="left">–</div><div class="sub" id="leftsub">&nbsp;</div></div></div>
+          <div><div class="label" id="lblleft">Left to upload</div><div class="value" id="left">–</div><div class="sub" id="leftsub">&nbsp;</div></div></div>
         <div class="tile"><span class="badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
           <div><div class="label">Estimated finish</div><div class="value" id="eta">–</div><div class="sub" id="etasub">&nbsp;</div></div></div>
         <div class="tile"><span class="badge"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></span>
-          <div><div class="label">Verified</div><div class="value" id="verified">–</div><div class="sub">checksum-matched on Drive</div></div></div>
+          <div><div class="label" id="lblver">Verified</div><div class="value" id="verified">–</div><div class="sub" id="versub">checksum-matched on Drive</div></div></div>
       </div>
       <div class="graph">
-        <div class="head"><span class="kicker">Upload speed</span><span class="meta" id="graphcap">last 15 minutes</span></div>
+        <div class="head"><span class="kicker" id="graphlbl">Upload speed</span><span class="meta" id="graphcap">last 15 minutes</span></div>
         <svg id="spark" viewBox="0 0 600 130" preserveAspectRatio="none">
           <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F15928" stop-opacity=".5"/><stop offset="1" stop-color="#F15928" stop-opacity="0"/></linearGradient></defs>
           <g id="gridlines"></g>
@@ -334,6 +334,31 @@ function render(s){
   const done=s.done>=s.total-1e6;
   $('headline').textContent=done?'Handover upload complete':'Uploading to Google Drive';
   spark(s.history);
+  const J=s.john, jon=J&&J.total&&!J.done;
+  if(jon){
+    const jp=J.bytes_total?100*J.bytes_done/J.bytes_total:0;
+    $('headline').textContent='Finding John in the footage';
+    $('hudsize').textContent='FACE SCAN · READ-ONLY';
+    $('pct').innerHTML=(jp<10?jp.toFixed(1):jp.toFixed(0))+'<small>%</small>';
+    $('gb').textContent=`${GB(J.bytes_done)} of ${GB(J.bytes_total)} checked`;
+    $('ring').style.strokeDashoffset=741.4*(1-jp/100);
+    $('lblspeed').textContent='Reading from Drive';
+    $('speed').textContent=MBs(J.rate||0)+' MB/s';
+    $('speedavg').textContent=`${J.current.length} videos being checked at once`;
+    $('lblleft').textContent='Left to check';
+    $('left').textContent=GB(J.bytes_total-J.bytes_done);
+    $('leftsub').textContent=`${(J.total-J.scanned).toLocaleString('en-AU')} videos still to go`;
+    $('eta').textContent=J.eta?new Date(J.eta*1000).toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit'}):'–';
+    $('etasub').textContent=J.eta?new Date(J.eta*1000).toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'}):'Working it out…';
+    $('lblver').textContent='Videos with John';
+    $('verified').textContent=`${J.found.length}`;
+    $('versub').textContent=`found so far · ${J.scanned.toLocaleString('en-AU')} of ${J.total.toLocaleString('en-AU')} videos checked`;
+    $('graphlbl').textContent='Drive read speed';
+    if(J.history&&J.history.length>1) spark(J.history);
+  }else{
+    $('hudsize').textContent='4K · UPLOAD';$('lblspeed').textContent='Speed now';$('lblleft').textContent='Left to upload';
+    $('lblver').textContent='Verified';$('versub').textContent='checksum-matched on Drive';$('graphlbl').textContent='Upload speed';
+  }
 
   const c=s.cards;
   $('cardsmeta').textContent=`${c.files_done} of ${c.files} files · ${GB(c.done)} of ${GB(c.total)}`+(c.failed?` · ${c.failed} need a retry`:'');
@@ -398,8 +423,9 @@ function clocks(){
   $('rec').classList.toggle('stale',stale);$('rec2').classList.toggle('stale',stale);
   $('livelbl').textContent=stale?'WAITING':'LIVE';
   $('clock').textContent=new Date().toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit',second:'2-digit'});
-  if(S){ if(S.run_start) $('elapsed').textContent=hms(now-S.run_start);
-         $('remain').textContent=S.eta?hms(S.eta-now):'--:--:--'; }
+  if(S){ const R=(S.john&&S.john.total&&!S.john.done)?{run_start:S.john.start,eta:S.john.eta}:S;
+         if(R.run_start) $('elapsed').textContent=hms(now-R.run_start);
+         $('remain').textContent=R.eta?hms(R.eta-now):'--:--:--'; }
 }
 async function tick(){
   try{if(!API) await loadApi(); const r=await fetch(API+'/status.json',{cache:'no-store'});const s=await r.json();if(s.error)throw 0;S=s;render(s);lastOk=Date.now();$('err').textContent='';}
