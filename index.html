@@ -402,6 +402,17 @@ function render(s){
     const mx=Math.max(1,...j.found.map(f=>f[1]));
     $('jlist').innerHTML=j.found.length?j.found.map(f=>`<div class="df"><span class="nm">${esc(f[0].replace(/／/g,'/'))}<small>${f[1]} matching frames (to be checked by eye)</small></span><span class="sz">${f[1]}</span><div class="bar"><i style="width:${(100*f[1]/mx).toFixed(1)}%"></i></div></div>`).join(''):'<div class="df"><span class="nm">No confirmed matches yet<small>Matches appear here as each video finishes</small></span></div>';
   }
+  const PH=s.john&&s.john.photos;
+  if(PH&&!PH.finished&&PH.total){
+    const pp=100*PH.done/PH.total;
+    $('headline').textContent='Finding group photos with John';
+    $('hudsize').textContent='PHOTO SCAN · READ-ONLY';
+    $('pct').innerHTML=(pp<10?pp.toFixed(1):pp.toFixed(0))+'<small>%</small>';
+    $('gb').textContent=`${PH.done.toLocaleString('en-AU')} of ${PH.total.toLocaleString('en-AU')} photos checked`;
+    $('ring').style.strokeDashoffset=741.4*(1-pp/100);
+    $('lblleft').textContent='Photos left';$('left').textContent=(PH.total-PH.done).toLocaleString('en-AU');$('leftsub').textContent='camera JPG and Sony RAW';
+    $('lblver').textContent='Photos with John and others';$('verified').textContent=PH.group;$('versub').textContent='likely group photos, to be checked by eye';
+  }
   const L=s.john&&s.john.lib;
   if(L){ $('libsec').hidden=false;
     const row=(n,d,x)=>{const p=x.bytes?100*x.have_bytes/x.bytes:0,st=x.files&&x.verified===x.files?'verified':x.have<x.files?'active':'queued';
