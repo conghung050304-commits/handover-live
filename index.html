@@ -243,6 +243,11 @@
     </div>
   </section>
 
+  <section id="libsec" hidden>
+    <div class="sechead"><div><div class="kicker">Saved to the Mac</div><h2>Footage for Grapher Media and John</h2></div><div class="meta" id="libmeta"></div></div>
+    <div class="list" id="liblist"></div>
+  </section>
+
   <section>
     <div class="sechead"><div><div class="kicker">Live on Google Drive</div><h2>Inside the Handover folder</h2></div><div class="meta" id="drivemeta">Checking Google Drive…</div></div>
     <div class="drivebox">
@@ -396,6 +401,13 @@ function render(s){
     if(j.current.length&&!j.done){$('jnow').hidden=false;$('jnow').innerHTML=`<span class="rec"></span><span><b>Checking now</b> `+j.current.map(p=>`<span class="file">${esc(short(p.replace(/／/g,'/')))}</span>`).join(' <span class="muted">·</span> ')+`</span>`}else $('jnow').hidden=true;
     const mx=Math.max(1,...j.found.map(f=>f[1]));
     $('jlist').innerHTML=j.found.length?j.found.map(f=>`<div class="df"><span class="nm">${esc(f[0].replace(/／/g,'/'))}<small>${f[1]} matching frames (to be checked by eye)</small></span><span class="sz">${f[1]}</span><div class="bar"><i style="width:${(100*f[1]/mx).toFixed(1)}%"></i></div></div>`).join(''):'<div class="df"><span class="nm">No confirmed matches yet<small>Matches appear here as each video finishes</small></span></div>';
+  }
+  const L=s.john&&s.john.lib;
+  if(L){ $('libsec').hidden=false;
+    const row=(n,d,x)=>{const p=x.bytes?100*x.have_bytes/x.bytes:0,st=x.files&&x.verified===x.files?'verified':x.have<x.files?'active':'queued';
+      return `<div class="item ${st}"><span class="ic">${st==='verified'?ICON.check:st==='active'?ICON.spin:ICON.alert}</span><span class="n">${n}<small>${d} · ${x.have} of ${x.files} files on the Mac · ${x.verified} checksum-verified</small></span><div class="bar ${st==='active'?'active':''}"><i style="width:${p.toFixed(1)}%"></i></div><span class="s">${GB(x.bytes)}</span></div>`};
+    $('libmeta').textContent='Copied from Drive (read-only) · every file checked against Drive by MD5';
+    $('liblist').innerHTML=(L.usable?row('Usable footage (Grapher Media)','Studio set-up, Room Tour, drone, guest faces',L.usable):'')+(L.john&&L.john.files?row('John','Every clip John appears in, cut smoothly',L.john):'');
   }
   const d=s.drive||{};
   if(d.checked){
